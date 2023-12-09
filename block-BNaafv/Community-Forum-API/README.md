@@ -5,6 +5,30 @@ This application lists all API endpoints for creating a community forum.
 - For authenticated request, add token in req headers - Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
 - All routes prefix /api in their endpoint - eg: /api/users/login
 
+<!-- One major learning from this project: -->
+
+Error faced:
+Cast to ObjectId failed for value "aman12345" (type string) at path "author" because of "BSONError"
+
+When does it occur?
+When I pass a request from POSTMAN like:
+{
+"title": "What is event loop",
+"author": "aman12345",
+"slug": "what-is-EVENT-LOOP"
+}
+
+say my goal is - to update the question using the request above.
+First, using the questionID - we find the authorID, which is inturn a particular user's id who is logged in.
+Then, using that user's Id when we try to update the author field, it gives an error like:
+
+console.log(userForThisQuestion.\_id);
+OUTPUT: new ObjectId('65726adc7069d9040b298a04')
+Expected: 65726adc7069d9040b298a04
+
+Solution - We need a plain string representation of the ObjectId. To convert the Mongoose ObjectId to a string, you can use the .toString() method.
+In this case since we will query in a lot of places we have used a custom function - objectIdToString which does the same thing.
+
 <!-- Q1. REGISTER USER -->
 
 Requirements:
@@ -170,5 +194,205 @@ NOTE: Since I have modelled the question schema to have author as the user who i
 "updatedAt":"2023-12-08T02:21:23.450Z",
 "\_\_v":0
 }
+]
+}
+
+<!-- Q7. List Questions -->
+
+Requirements:
+method -> GET
+pathname -> /questions
+authentication optional
+It should return an array of All Question in the above specified format.
+
+Ans.
+
+<!-- Output -->
+
+{
+"questions":[
+{"\_id":"65727da385cd3588884126e9","title":"What is Jason.parse?","author":"65726adc7069d9040b298a04","slug":"what-is-json-parse","tags":[],"createdAt":"2023-12-08T02:21:23.450Z","updatedAt":"2023-12-08T02:21:23.450Z","\*\*v":0},
+
+        {"\_id":"6573bc096cf069b675357173","title":"What is EVENT LOOP","author":"65726adc7069d9040b298a04","slug":"what-is-event-loop","tags":[],"createdAt":"2023-12-09T00:59:53.896Z","updatedAt":"2023-12-09T00:59:53.896Z","\*\*v":0}
+    ]
+
+}
+
+<!-- Q8. UPDATE question -->
+
+method -> PUT
+pathname -> /questions/:questionId
+authentication required
+
+optional fields are
+
+description
+tags
+title
+It should return the Question which was updated.
+
+Ans.
+
+<!-- OUTPUT -->
+
+{
+"question": {
+"\_id": "6573d3d59c317ecd9df65ea3",
+"title": "What is React12",
+"author": "65726adc7069d9040b298a04",
+"slug": "what-is-react-12",
+"tags": [],
+"createdAt": "2023-12-09T02:41:25.265Z",
+"updatedAt": "2023-12-09T03:05:06.037Z",
+"\_\_v": 0
+}
+}
+
+<!-- Q9. DELETE QUESTION -->
+
+method -> DELETE
+pathname -> /questions/:slug
+authentication required
+It should return deleted Question. It should also delete associated answers.
+
+Ans.
+
+<!-- OUTPUT -->
+
+{
+"question": {
+"\_id": "6573d3d59c317ecd9df65ea3",
+"title": "What is React12",
+"author": "65726adc7069d9040b298a04",
+"slug": "what-is-react-12",
+"tags": [],
+"createdAt": "2023-12-09T02:41:25.265Z",
+"updatedAt": "2023-12-09T03:05:06.037Z",
+"\_\_v": 0
+}
+}
+And, the corresponding Answers to this question are also deleted.
+
+NOTE:
+For answers - add and list answers are modelled inside /api/questions route since these 2 routes require questionId.
+Whereas the update and delete answers are modelled inside /api/answers - routes/answers.js since they dont need the questionId.
+
+<!-- Q10. Add ANSWER -->
+
+method -> POST
+pathname -> /questions/:questionId/answers
+authentication required
+
+required fileds are
+
+text answer
+author
+It should return an Answer
+
+Ans.
+
+<!-- OUTPUT -->
+
+{
+"answers": {
+"text": "This is the answer to the event loop question 1",
+"author": "65726adc7069d9040b298a04",
+"questionId": "6573bc096cf069b675357173",
+"\_id": "6573e45e5a86d2ad7a0fc5e1",
+"createdAt": "2023-12-09T03:51:58.748Z",
+"updatedAt": "2023-12-09T03:51:58.748Z",
+"\_\_v": 0
+}
+}
+
+<!-- Q11. LIST all answers for a given question -->
+
+method -> GET
+pathname -> /questions/:questionId/answers
+authentication required
+It should return an array of answers
+
+Ans.
+
+<!-- OUTPUT -->
+
+{
+"answers": [
+[
+{
+"_id": "6573e3f8bffa7ab7a23c8cb3",
+"text": "This is the answer to the event loop question",
+"author": "65726adc7069d9040b298a04",
+"questionId": "6573bc096cf069b675357173",
+"createdAt": "2023-12-09T03:50:16.831Z",
+"updatedAt": "2023-12-09T03:50:16.831Z",
+"__v": 0
+},
+{
+"_id": "6573e45e5a86d2ad7a0fc5e1",
+"text": "This is the answer to the event loop question 1",
+"author": "65726adc7069d9040b298a04",
+"questionId": "6573bc096cf069b675357173",
+"createdAt": "2023-12-09T03:51:58.748Z",
+"updatedAt": "2023-12-09T03:51:58.748Z",
+"__v": 0
+}
+]
+]
+}
+
+<!-- Q12. Update an answer -->
+
+method -> PUT
+pathname -> /answers/:answerId
+authentication required
+required field
+answer text
+It should return an Answer.
+
+Ans.
+
+<!-- OUTPUT -->
+
+{
+"answer": {
+"\_id": "6573e45e5a86d2ad7a0fc5e1",
+"text": "This is the answer to the event loop question 1 again",
+"author": "65726adc7069d9040b298a04",
+"questionId": "6573bc096cf069b675357173",
+"createdAt": "2023-12-09T03:51:58.748Z",
+"updatedAt": "2023-12-09T04:02:47.270Z",
+"\_\_v": 0
+}
+}
+
+<!-- Q13. DELETE the answer and remove reference of the answer from the Question table -->
+
+Ans.
+
+<!-- OUTPUT -->
+
+{
+"\_id": "6573e3f8bffa7ab7a23c8cb3",
+"text": "This is the answer to the event loop question",
+"author": "65726adc7069d9040b298a04",
+"questionId": "6573bc096cf069b675357173",
+"createdAt": "2023-12-09T03:50:16.831Z",
+"updatedAt": "2023-12-09T03:50:16.831Z",
+"\_\_v": 0
+}
+
+<!-- Q14. List tags -->
+
+method -> GET
+pathname -> /tags
+authentication optional
+It should return an array of all tags used.
+
+{
+"tags": [
+"nodejs",
+"streams",
+"react"
 ]
 }
