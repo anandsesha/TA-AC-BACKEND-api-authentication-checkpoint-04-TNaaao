@@ -11,6 +11,13 @@ const questionSchema = new mongoose.Schema(
     },
     slug: { type: String, required: true },
     tags: [String],
+    answers: [
+      // Cross-referencing
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Answer', // Reference to the Answer model
+      },
+    ],
   },
   { timestamps: true }
 );

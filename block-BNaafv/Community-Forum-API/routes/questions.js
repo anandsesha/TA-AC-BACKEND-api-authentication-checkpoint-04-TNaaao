@@ -139,6 +139,13 @@ router.post(
         questionId,
       });
 
+      //   Update the question collection id DB with teh answer created
+      await Question.findByIdAndUpdate(
+        questionId,
+        { $push: { answers: createdAnswer._id } },
+        { new: true }
+      );
+
       res.status(201).json({ answers: createdAnswer });
     } catch (error) {
       next(error);
