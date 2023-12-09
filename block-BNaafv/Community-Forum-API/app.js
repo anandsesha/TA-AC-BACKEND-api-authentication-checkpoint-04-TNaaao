@@ -9,6 +9,9 @@ var usersRouter = require('./routes/users');
 var profileRouter = require('./routes/profiles');
 
 var questionsRouter = require('./routes/questions');
+var answersRouter = require('./routes/answers');
+var tagsRouter = require('./routes/tags');
+
 const { default: mongoose } = require('mongoose');
 
 var app = express();
@@ -34,6 +37,8 @@ app.use('/api', indexRouter);
 app.use('/api/users', usersRouter); // routes for register, login and view current user
 app.use('/api/profile', profileRouter); // routes for profile
 app.use('/api/questions', questionsRouter); // routes for community forum questions
+app.use('/api/answers', answersRouter); // routes handled for community forum question's answers
+app.use('/api/tags', tagsRouter); // to handle all routes for a question's tag updates
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
