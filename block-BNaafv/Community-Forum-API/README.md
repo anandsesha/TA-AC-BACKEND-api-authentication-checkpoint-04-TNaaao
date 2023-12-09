@@ -1,3 +1,29 @@
+# Community Forum API
+
+## Project Goal:
+
+Welcome to the Community Forum API, a robust and flexible RESTful API designed to power an engaging and dynamic community forum platform much like StackOverflow. The primary goal of this project is to provide developers with a comprehensive foundation for building and customizing their own forum-based applications. With a focus on simplicity, scalability, and extensibility, this API aims to empower developers to create vibrant online communities.
+
+## What We've Accomplished:
+
+In this project, we have meticulously designed and implemented a feature-rich API for managing questions, answers, user profiles, and more. Some key achievements include:
+
+- **Authentication and Authorization:** Secure your forum with user authentication and authorization mechanisms, ensuring that only authorized users can interact with the API.
+
+- **Questions and Answers:** Create, retrieve, update, and delete questions and answers, enabling a seamless flow of information within the community.
+
+- **User Profiles:** Manage user profiles with the ability to update information such as username, bio, and profile image.
+
+- **Tags and Categories:** Organize content with tags and categories, allowing users to discover relevant topics easily.
+
+- **Community Interaction:** Enable users to post questions, provide answers, and engage in meaningful discussions.
+
+- **Tag Listing:** Effortlessly retrieve a list of unique tags used in the forum, providing insights into popular topics.
+
+This project showcases a deep understanding of RESTful API development, emphasizing best practices in security, data modeling, and user experience. Whether you're a seasoned developer looking for a robust API solution or a newcomer eager to explore the world of community forums, this API has you covered.
+
+Explore the documentation below to get started with integrating the Community Forum API into your projects and building vibrant online communities.
+
 <!-- Community Forum -->
 
 This application lists all API endpoints for creating a community forum.
@@ -396,3 +422,27 @@ It should return an array of all tags used.
 "react"
 ]
 }
+
+Ans.
+
+<!-- OUTPUT -->
+
+{
+"tagsArray": [
+"React",
+"Redux",
+"JS"
+]
+}
+
+Future scope:
+
+Further add endpoints for following actions
+
+- follow/unfollow other user
+- upvote questions/answers
+- add comments on questions/answers
+- admin dashboard
+  - admin registration/login
+  - admin can track/block users
+  - admin can track all questions at a time
